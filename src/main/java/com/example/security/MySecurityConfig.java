@@ -4,6 +4,7 @@ package com.example.security;
 import com.example.services.MyUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,10 +15,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Random;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class MySecurityConfig {
+
+    @Bean public Random random() { return new Random();}
 
     @Bean
     public UserDetailsService userDetailsService()
@@ -30,7 +35,6 @@ public class MySecurityConfig {
     {
         return new BCryptPasswordEncoder();
     }
-
     @Bean
     public AuthenticationProvider authenticationProvider()
     {
@@ -39,16 +43,18 @@ public class MySecurityConfig {
         pvd.setPasswordEncoder(passwordEncoder());
         return pvd;
     }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
         http
+                .csrf().disable()
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/account", "/basket").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/trips/*/end").permitAll()
+                                .requestMatchers("/account", "/basket", "/cars/map").authenticated()
                                 .anyRequest().permitAll()
                 )
                 .formLogin((form) -> form

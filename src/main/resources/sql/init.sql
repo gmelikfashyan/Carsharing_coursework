@@ -1,10 +1,6 @@
---INSERT INTO products (id, name, brand, product_price) values (1, 'Худи из хлопкового футера c карманом-кенгуру', 'HUGO', '15900') ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (2, 'Шорты с карманами', 'Blend', 4490) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (3, 'Футболка хлопковая с логотипом', 'Calvin Klein', 4190) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (4, 'Футболка хлопковая с принтом', 'Desigual', 2900) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (5, 'Бейсболка хлопковая', 'Superdry', 1900) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (6, 'Футболка хлопковая', 'Gloria Jeans', 2700) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (7, 'Сумка через плечо', 'BOSS', 11900) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (8, 'Брюки на кулиске с защипами', 'MARCO DI RADI', 6700) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (9, 'Худи из смесового хлопка', 'Champion', 8900) ON CONFLICT (id) DO NOTHING;
---INSERT INTO products (id, name, brand, product_price) values (10, 'Хлопковая футболка с принтом', 'REEBOK', 2390);
+INSERT INTO car (id, make, licensePlate, model, latitude, longitude) VALUES
+            (2, 'Honda', 'DEF456', 'Civic', 55.7522, 37.6156),
+            (3, 'BMW', 'GHI789', 'X5', 55.7601, 37.6184),
+            (4, 'Mercedes', 'JKL012', 'E-Class', 55.7650, 37.6050),
+            (5, 'Audi', 'MNO345', 'A4', 55.7589, 37.6206),
+            (6, 'Ford', 'PQR678', 'Focus', 55.7541, 37.6228);

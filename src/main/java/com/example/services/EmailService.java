@@ -18,7 +18,7 @@ public class EmailService {
     private String HOST_NAME = "smtp.yandex.ru";
     private int PORT_NAME = 465;
     private String USER_NAME = "gevorkmelikfashyan@yandex.ru";
-    private String PASSWORD = "Gevork2611";
+    private String PASSWORD = "jjibzexueacyfwcq";
 
     @Async
     public void sendEmail(String mailTo, String theme, String text) {

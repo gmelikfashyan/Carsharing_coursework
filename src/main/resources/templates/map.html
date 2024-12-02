@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Car Sharing Map</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href = "/static/css/style2.css" rel = "stylesheet">
+    <link href = "/static/css/style1.css" rel = "stylesheet">
+    <style> #map { height: 600px; }
+        .hint-content { font-family: Arial, sans-serif; font-size: 14px; color: blue; }
+        .ymaps-2-1-79-map ymaps, .ymaps-2-1-79-map ymaps:after, .ymaps-2-1-79-map ymaps:before {
+            box-sizing: content-box;
+            border-radius: 10px !important;
+        }
+        .balloon {
+            border-radius: 10px;
+            font-family: 'Noto sans'; font-size: 20px; color: black;
+            width: 320px;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .balloon img {
+            width: 318px;
+        }
+        .balloon h2 { font-size: 24px; color: black; font-weight: 700 }
+        .balloon {font-weight: 500}
+        .balloon .price {
+            font-weight: 600;
+            font-size: 20px;
+        }
+    </style>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=50ba5c42-aad6-43b9-b853-3c66f0167acd&lang=ru_RU" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+<form th:action="@{/trips}" method="post" style="display:none;">
+    <input type="hidden" name="carId" id="carId">
+    <input type="hidden" name="userId" th:value="${user.Id}">
+    <button type="submit">Book</button>
+</form>>
+    <header>
+        <input type="checkbox" id="burger-checkbox" class="burger-checkbox"></input>
+        <label class="burger" for="burger-checkbox"></label>
+        <a href ="file:///D:/ркчир/пр1/index.html"><img src = "/static/images/android-chrome-512x512.png" width="64" height="64"></a>
+        <nav class="header-nav">
+            <ul class="header-left-nav">
+                <li> <a href="/cars/map">Выбор машины</a></li>
+                <li> <a href="/account">Личный кабинет</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class=""></div>
+        <div id="map"></div>
+        <div id="carData" th:utext="${carListJson}" style="display:none;"></div> <!-- Скрытый элемент для передачи данных -->
+        <div id="userId" th:text="${user.id}" style="display:none;"></div> <!-- Скрытый элемент для передачи данных -->
+
+        <script>
+            function book(carId) {
+                document.getElementById("carId").value = carId;
+                document.querySelector("form").submit();
+            }
+            ymaps.ready(function () {
+                var map = new ymaps.Map("map", {
+                    center: [55.7558, 37.6176], // Центр карты (Москва)
+                    zoom: 13,
+                });
+
+                // Получение данных автомобилей из скрытого элемента
+                var carDataElement = document.getElementById('carData');
+                var carDataText = carDataElement.textContent.trim(); // Убедитесь, что нет лишних пробелов
+
+                if (carDataText) {
+                    var cars = JSON.parse(carDataText);
+
+                    // Перебор данных и добавление маркеров
+                    cars.forEach(function(car) {
+                        var marker = new ymaps.Placemark([car.latitude, car.longitude], {
+                            //hintContent: `<div><b>${car.make} ${car.model}</b><br>License Plate: ${car.licensePlate}<div>`,
+                            balloonContent: `<div class="balloon">
+                                           <img src="${car.imageUrl}.">
+                                           <h2>${car.make} ${car.model}</h2>
+                                           <p>${car.licensePlate}</p>
+                                           <div><span class="price">₽${car.pricing.ratePerHour}</span>/час</div>
+                                           <div class="d-grid gap-2">
+                                               <button class="btn btn-primary" onclick="book(${car.id})">Забронировать</button>
+                                           </div>
+
+                                         <div>`
+                        }, {
+                            iconLayout: 'default#image',
+                            iconImageHref: 'https://tc.mobile.yandex.net/3.0/getimage?tag=class_comfortplus_poi&size_hint=128', // Замените на URL вашей иконки
+                            iconImageSize: [30, 42], // Размер иконки
+                            iconImageOffset: [-15, -42] // Смещение иконки
+                        });
+                        map.geoObjects.add(marker);
+                    });
+                }
+
+                function selectCar(carId) {
+                    // Логика выбора автомобиля
+                    alert("Car ID: " + carId);
+                }
+            });
+        </script>
+    </main>
+    <footer class="registration-footer">
+        <div class="container">
+            <section class="footer-section">
+                <h3>О нас</h3>
+                <p>ManStyle - это лучший сервис аренды автомобиля, где вы быстро подберёте подходящую машину и получите только положительные эмоции от поездки. Главная цель нашей команды - быть проводником в мир автомобилей для всех желающих. </p>
+                <div class="social-footer">
+                    <button class="button-tg" onclick="window.location.href = 'https://web.telegram.org/';">
+                        <img src="/static/images/free-icon-telegram-2111708.png" width="16" height="16">
+                    </button>
+                    <button class="button-vk" onclick="window.location.href = 'https://vk.com/';">
+                        <img src="/static/images/free-icon-vk-733639.png" width="16" height="16">
+                    </button>
+                    <button class="button-yt" onclick="window.location.href = 'https://www.youtube.com/';">
+                        <img src="/static/images/free-icon-youtube-2111795.png" width="16" height="16">
+                    </button>
+                </div>
+            </section>
+            <section class="footer-section">
+                <h3>Мой ManStyle</h3>
+                <ul class="footer-list">
+                    <li><a href="registration.html">Каталог</a></li>
+                    <li><a href="aboutUs.html">Личный кабинет</a></li>
+                </ul>
+            </section>
+            <section class="footer-section">
+                <h3>Связаться с нами</h3>
+                <ul class="footer-list">
+                    <li>
+                        <img src="/static/images/telephone-handle-silhouette.png" alt="" class="connect-img">
+                        <a href="tel:01234567890">+7 (918) 777-77-77</a><br><!--Ссылка на номер телефона-->
+                    </li>
+                    <li>
+                        <img src="/static/images/envelope.png" alt="" class="connect-img">
+                        <a href="mailto:sendemail@mail.ru?subject=Новый заказ&body=Здравствуйте, я хочу сделать заказ в вашем магазине.">ManStyle@mail.ru</a><!--Ссылка на эл. почту-->
+                    </li>
+                    <li>
+                        <p class="myName">Меликфашян Г.А ИКБО-20-22</p>
+                    </li>
+                </ul>
+            </section>
+            <p><small>© 2023 ManStyle. Магазин одежды</small></p>
+        </div>
+    </footer>
+</body>
+</html>
+
+
+
+
+
+

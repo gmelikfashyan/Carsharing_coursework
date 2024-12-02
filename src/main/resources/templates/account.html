@@ -10,21 +10,24 @@
     <link href = "/static/css/styleAccount.css" rel = "stylesheet">
     <link href = "/static/css/style1.css" rel = "stylesheet">
     <title>Аккаунт</title>
+    <style>
+        .card img {
+            max-width: 70%;
+        }
+    </style>
 </head>
 <body>
 <header>
+    <input type="checkbox" id="burger-checkbox" class="burger-checkbox"></input>
+    <label class="burger" for="burger-checkbox"></label>
     <a href ="file:///D:/ркчир/пр1/index.html"><img src = "/static/images/android-chrome-512x512.png" width="64" height="64"></a>
     <nav class="header-nav">
         <ul class="header-left-nav">
-            <li> <a href="/productcatalog">Каталог</a></li>
+            <li> <a href="/cars/map">Выбор машины</a></li>
             <li> <a href="/account">Личный кабинет</a></li>
-            <li> <a class="nav_link" href="#" onclick="submitForm()">Корзина</a></li>
         </ul>
     </nav>
 </header>
-<form id="myForm" th:action="@{/basketPost}" th:object="${amountsProduct}" th:method="POST" style="display: none;">
-    <input id="inputItems" style="display: none;" readonly th:field="*{number}">
-</form>
 <main class="account-main">
     <div class="userInfo" th:object="${user}">
         <img  width="86px" src="/static/images/avatar.png">
@@ -36,24 +39,22 @@
     </div>
 
     <div class="ordersInfo">
-        <h1>Ваши заказы</h1>
-        <div class="orders" th:each="order : ${orders}">
+        <h1>Ваши поездки</h1>
+        <div class="orders" th:each="trip : ${trips}">
             <div class="simpleOrder">
 
 
-                <div class="order-elem">
-                    <div th:each="prod : ${order.getOrderItems()}" class="card">
-                        <img th:src="@{'/static/images/' + ${prod.getProduct().getId()} + '.webp'}">
-                        <p class="brand" th:text="${prod.getProduct().getBrand()}"></p>
-                        <p class="card-title" th:id="'title' + ${prod.getId()}" th:text="${prod.getProduct().getName()}"></p>
-                        <div class="button-wrapper">
-                            <p class="price price-katalog" th:id="'info' + ${prod.getId()}" th:text="${prod.getProduct().getProductPrice() + ',00 ₽'}"></p>
-                        </div>
+                <div class="card">
+                    <img th:src="${trip.car.imageUrl}">
+                    <p class="brand" th:text="${trip.getCar().getMake()}"></p>
+                    <p class="card-title" th:id="'title' + ${trip.getId()}" th:text="${trip.getCar().getLicensePlate()}"></p>
+                    <div class="button-wrapper">
+                        <p class="price price-katalog" th:id="'info' + ${trip.getId()}" th:text="${trip.getTotalCost() + '₽'}"></p>
                     </div>
                 </div>
                 <div class="description-wrapper">
-                    <p class="order-date" th:text="${order.getOrderDate()}"></p>
-                    <p class="order-cost" th:text="${order.getTotalCost() + ' ₽'}"></p>
+                    <p class="order-cost" th:text="${#temporals.format(trip.getStartTime(), 'dd-MMM-yyyy HH:mm')}"></p>
+                    <p class="order-cost" th:text="${#temporals.format(trip.getEndTime(), 'dd-MMM-yyyy HH:mm')}"></p>
                 </div>
             </div>
         </div>
@@ -73,7 +74,7 @@
     <div class="container">
         <section class="footer-section">
             <h3>О нас</h3>
-            <p>ManStyle - это лучший магазин одежды, где вы точно подберёте лучшый образ книгу и получите только положительные эмоции от обслуживания. Главная цель нашей команды - быть проводником в мир моды для всех желающих. </p>
+            <p>ManStyle - это лучший сервис аренды автомобиля, где вы быстро подберёте подходящую машину и получите только положительные эмоции от поездки. Главная цель нашей команды - быть проводником в мир автомобилей для всех желающих. </p>
             <div class="social-footer">
                 <button class="button-tg" onclick="window.location.href = 'https://web.telegram.org/';">
                     <img src="/static/images/free-icon-telegram-2111708.png" width="16" height="16">
@@ -91,7 +92,6 @@
             <ul class="footer-list">
                 <li><a href="registration.html">Каталог</a></li>
                 <li><a href="aboutUs.html">Личный кабинет</a></li>
-                <li><a href="aboutUs.html">Корзина</a></li>
             </ul>
         </section>
         <section class="footer-section">
@@ -112,7 +112,6 @@
         </section>
         <p><small>© 2023 ManStyle. Магазин одежды</small></p>
     </div>
-    <script src = "/static/js/functions.js"></script>
 </footer>
 
 

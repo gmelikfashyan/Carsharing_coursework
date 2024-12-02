@@ -22,6 +22,5 @@ public class User
     private String name;
     private String surName;;
     private String password;
-    @OneToMany
-    private List<Order> orders;
+
 }
